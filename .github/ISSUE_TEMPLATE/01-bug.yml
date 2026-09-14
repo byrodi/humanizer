@@ -1,0 +1,42 @@
+name: Bug report
+description: The skill or the linter does not work as documented
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search [existing issues](https://github.com/byrodi/humanizer/issues?q=is%3Aissue) first. Security problems go to a [private report](https://github.com/byrodi/humanizer/security/advisories/new), not here.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you asked for, what you expected and what the skill or the linter did instead.
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Request and text
+      description: The request that broke and a short sample of the text. Remove anything private.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Skill commit
+      description: Output of `git rev-parse --short HEAD` in your clone.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Agent
+      description: Claude Code or Codex with its version, and the model if you know it.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Linter output
+      description: Output of `lint.py`, if the problem is in the linter. It is formatted as code automatically.
+      render: shell
