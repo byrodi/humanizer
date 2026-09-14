@@ -1,28 +1,35 @@
 # humanizer
 
-A Claude Code plugin with one skill that edits Russian and English prose. It removes signs of AI generation, bureaucratic phrasing and filler, keeps every fact, number and link of the original, and checks the result with a deterministic linter. The skill also runs as the final pass over a draft the agent wrote for another person, and it can audit a text for AI patterns without changing it.
+[![CI](https://github.com/byrodi/humanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/byrodi/humanizer/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/byrodi/humanizer)](LICENSE)
 
-## Features
+Agent skill that removes signs of AI writing, bureaucratic phrasing and filler from Russian and English text.
 
-- Pattern catalogues for both languages, 38 Russian patterns and 35 English ones (E1-E35), each with markers and before and after examples.
-- Hard bans that always fail a draft, such as `not just X but Y` constructions, em and en dashes, math signs in prose, rhetorical questions and decorative emoji.
-- A lint script (`scripts/lint.py`, Python 3 standard library only). It reports hard bans as errors with exit code 1 and pattern markers as warnings, and it catches chatbot copy-paste artifacts such as `oaicite` footnotes, `turn0search` markers and `utm_source=chatgpt.com`.
-- Detect mode, which returns a qualitative verdict with the list of patterns found and quotes. Detection is heuristic, so the skill gives no percentages.
-- Draft-for-others mode. When the agent writes a message to a colleague, a ticket comment, a PR description or a document, the skill runs all three phases over that draft and returns plain text without code fences, block quotes or backticks, ready to paste.
-- A messaging mode with registers for personal chat, work chat and formal letters.
+The agent picks it up when you ask to edit or check a text, and as a final pass over drafts it writes for other people. Facts, numbers and links stay. Code, configs, translation, spelling, legal and academic texts are out of scope.
+
+## How it works
+
+1. Audit. Lists every pattern found in the text, with a quote, before editing.
+2. Edit. Fixes only those findings, cutting filler before rewriting anything.
+3. Check. Runs the linter until no errors remain, then rereads against a checklist.
+
+## What you get
+
+- Pattern catalogues for Russian (38) and English (35), with before and after examples.
+- A linter that fails dashes, negative parallelisms and chatbot copy-paste traces.
+- Detect mode with a verdict in words and quoted evidence, no percentages.
+- Drafts for colleagues, tickets and PRs returned as plain text, ready to paste.
+- Registers for personal chat, work chat and formal letters.
 
 ## Usage
 
-Call the skill directly with `/humanizer:humanizer`, or let the agent pick it up from a request like these:
+Call `/humanizer:humanizer`, or ask in your own words:
 
 - "убери воду из этого текста"
 - "humanize this paragraph"
 - "проверь на AI, это писала нейросеть?"
-- "write a reply to the QA team about the fix and run it through humanizer"
 
-The skill does not generate content from nothing, translate, fix spelling, or edit code, configs, legal and academic texts.
-
-Run the linter on its own:
+The linter also runs on its own. It needs only Python 3, prints its report in Russian and exits with 1 when a hard ban is found.
 
 ```sh
 python3 skills/humanizer/scripts/lint.py draft.md
@@ -30,45 +37,27 @@ python3 skills/humanizer/scripts/lint.py < draft.md
 python3 skills/humanizer/scripts/lint.py --self-test
 ```
 
-## Install for Claude Code
+## Install
+
+Claude Code (remove or rename an existing `~/.claude/skills/humanizer` first):
 
 ```sh
-git clone https://github.com/stependiant/humanizer ~/IdeaProjects/skills/humanizer
+git clone https://github.com/byrodi/humanizer ~/IdeaProjects/skills/humanizer
 ln -s ~/IdeaProjects/skills/humanizer ~/.claude/skills/humanizer
 ```
 
-Remove or rename an existing `~/.claude/skills/humanizer` first. A new session loads the plugin as `humanizer@skills-dir`, and `git pull` in the clone updates it.
+A new session loads the plugin as `humanizer@skills-dir`. Run `git pull` in the clone to update.
 
-## Install for Codex
+Codex:
 
 ```sh
 ln -s ~/IdeaProjects/skills/humanizer/skills/humanizer ~/.agents/skills/humanizer
 ```
 
-Codex does not expand `${CLAUDE_SKILL_DIR}` in SKILL.md. The skill explains that the variable means its own folder, so paths still resolve.
-
-## Repository layout
-
-```
-humanizer/
-├── .claude-plugin/
-│   └── plugin.json
-├── skills/
-│   └── humanizer/
-│       ├── SKILL.md
-│       ├── references/
-│       │   ├── corrections.md    owner feedback, read in the audit phase
-│       │   ├── patterns-en.md    English patterns E1-E35
-│       │   └── patterns-ru.md    Russian patterns 1-38
-│       └── scripts/
-│           └── lint.py
-├── LICENSE
-├── README.md
-└── THIRD_PARTY.md
-```
+Codex does not expand `${CLAUDE_SKILL_DIR}`, and SKILL.md tells the agent to read it as the skill's own folder.
 
 ## Credits and license
 
 The skill combines and adapts [smixs/humanizer-ru](https://github.com/smixs/humanizer-ru) and [blader/humanizer](https://github.com/blader/humanizer), with the copy-paste artifact registry from [Vladimir-Human/humanizer-ru](https://github.com/Vladimir-Human/humanizer-ru) and [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop). The patterns build on [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). Upstream license texts are in [THIRD_PARTY.md](THIRD_PARTY.md).
 
-Released under the MIT License, see [LICENSE](LICENSE).
+Released under the [MIT License](LICENSE).

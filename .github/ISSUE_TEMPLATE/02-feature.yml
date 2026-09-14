@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a new pattern, a linter check or a change in behavior
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What the skill misses or gets wrong. Quote a real text if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How it could work. For a new pattern, give markers and a before and after example.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds or other tools you tried.

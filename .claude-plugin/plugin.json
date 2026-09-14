@@ -1,10 +1,10 @@
 {
   "name": "humanizer",
-  "description": "Editor for Russian and English text that removes signs of AI writing, bureaucratic phrasing and filler while keeping the facts. Ships pattern catalogues, a deterministic linter and a detect mode.",
+  "description": "Agent skill that removes signs of AI writing, bureaucratic phrasing and filler from Russian and English text.",
   "author": {
     "name": "Rodion Masalov",
-    "url": "https://github.com/stependiant"
+    "url": "https://github.com/byrodi"
   },
-  "repository": "https://github.com/stependiant/humanizer",
+  "repository": "https://github.com/byrodi/humanizer",
   "license": "MIT"
 }
